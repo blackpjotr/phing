@@ -311,7 +311,7 @@ class ExecTask extends Task
      *
      * @param bool $passthru If passthru shall be used
      */
-    public function setPassthru($passthru): void
+    public function setPassthru(bool $passthru): void
     {
         $this->passthru = $passthru;
     }
@@ -469,6 +469,8 @@ class ExecTask extends Task
      */
     protected function buildCommand()
     {
+        $this->realCommand = '';
+
         if (null !== $this->error) {
             $this->realCommand .= ' 2> ' . escapeshellarg($this->error->getPath());
             $this->log(

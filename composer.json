@@ -9,6 +9,7 @@
         "php",
         "build-tool",
         "build-automation",
+        "dev",
         "ant",
         "make"
     ],
@@ -54,8 +55,7 @@
         "allow-plugins": {
             "phing/phing-composer-configurator": true,
             "ergebnis/composer-normalize": true,
-            "symfony/flex": true,
-            "cweagans/composer-patches": true
+            "symfony/flex": true
         }
     },
     "require": {
@@ -65,9 +65,9 @@
         "ext-libxml": "*",
         "ext-simplexml": "*",
         "ext-xml": "*",
-        "sebastian/version": "^3.0|^4.0",
-        "symfony/console": "^5.0|^6.0",
-        "symfony/yaml": "^5.0|^6.0"
+        "sebastian/version": "^3.0|^4.0|^5.0",
+        "symfony/console": "^5.3.10|^6.0|^7.0",
+        "symfony/yaml": "^5.0|^6.0|^7.0"
     },
     "require-dev": {
         "ext-curl": "*",
@@ -79,7 +79,6 @@
         "ext-xsl": "*",
         "ext-zip": "*",
         "aws/aws-sdk-php": "^3.181",
-        "cweagans/composer-patches": "^1.7",
         "ergebnis/composer-normalize": "^2.13",
         "friendsofphp/php-cs-fixer": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
@@ -91,7 +90,7 @@
         "pdepend/pdepend": "^2.9",
         "pear/archive_tar": "^1.4",
         "pear/console_getopt": "^v1.4.3",
-        "pear/mail": "^1.4",
+        "pear/mail": "^2.0",
         "pear/mail_mime": "^1.10",
         "pear/net_ftp": "dev-master",
         "pear/net_growl": "dev-master",
@@ -103,11 +102,11 @@
         "phpmd/phpmd": "^2.14",
         "phpstan/phpstan": "^0.12.87 || ^1.0",
         "phpunit/phpunit": "^9.5.10",
-        "psr/http-message": "^1.0",
+        "psr/http-message": "^2.0",
         "roave/security-advisories": "dev-master",
-        "scssphp/scssphp": "~1.11.0",
+        "scssphp/scssphp": "^1.13",
         "siad007/versioncontrol_hg": "^1.0",
-        "smarty/smarty": "^3.1",
+        "smarty/smarty": "^5.0",
         "squizlabs/php_codesniffer": "^3.5",
         "symfony/config": "^5.2|^6.0",
         "symfony/dependency-injection": "^5.2|^6.0",
@@ -116,31 +115,31 @@
         "tedivm/jshrink": "^1.3"
     },
     "replace": {
-        "phing/task-analyzers": "3.0.0-rc6",
-        "phing/task-apigen": "3.0.0-rc6",
-        "phing/task-archives": "3.0.0-rc6",
-        "phing/task-aws": "3.0.0-rc6",
-        "phing/task-coverage": "3.0.0-rc6",
-        "phing/task-dbdeploy": "3.0.0-rc6",
-        "phing/task-ftpdeploy": "3.0.0-rc6",
-        "phing/task-git": "3.0.0-rc6",
-        "phing/task-hg": "3.0.0-rc6",
-        "phing/task-http": "3.0.0-rc6",
-        "phing/task-inifile": "3.0.0-rc6",
-        "phing/task-ioncube": "3.0.0-rc6",
-        "phing/task-jshint": "3.0.0-rc6",
-        "phing/task-jsmin": "3.0.0-rc6",
-        "phing/task-liquibase": "3.0.0-rc6",
-        "phing/task-phkpackage": "3.0.0-rc6",
-        "phing/task-phpdoc": "3.0.0-rc6",
-        "phing/task-phpunit": "3.0.0-rc6",
-        "phing/task-sass": "3.0.0-rc6",
-        "phing/task-smarty": "3.0.0-rc6",
-        "phing/task-ssh": "3.0.0-rc6",
-        "phing/task-svn": "3.0.0-rc6",
-        "phing/task-visualizer": "3.0.0-rc6",
-        "phing/task-zendcodeanalyser": "3.0.0-rc6",
-        "phing/task-zendserverdevelopmenttools": "3.0.0-rc6"
+        "phing/task-analyzers": "self.version",
+        "phing/task-apigen": "self.version",
+        "phing/task-archives": "self.version",
+        "phing/task-aws": "self.version",
+        "phing/task-coverage": "self.version",
+        "phing/task-dbdeploy": "self.version",
+        "phing/task-ftpdeploy": "self.version",
+        "phing/task-git": "self.version",
+        "phing/task-hg": "self.version",
+        "phing/task-http": "self.version",
+        "phing/task-inifile": "self.version",
+        "phing/task-ioncube": "self.version",
+        "phing/task-jshint": "self.version",
+        "phing/task-jsmin": "self.version",
+        "phing/task-liquibase": "self.version",
+        "phing/task-phkpackage": "self.version",
+        "phing/task-phpdoc": "self.version",
+        "phing/task-phpunit": "self.version",
+        "phing/task-sass": "self.version",
+        "phing/task-smarty": "self.version",
+        "phing/task-ssh": "self.version",
+        "phing/task-svn": "self.version",
+        "phing/task-visualizer": "self.version",
+        "phing/task-zendcodeanalyser": "self.version",
+        "phing/task-zendserverdevelopmenttools": "self.version"
     },
     "autoload": {
         "psr-4": {
@@ -246,22 +245,14 @@
             "sshconfig": "Phing\\Task\\Ext\\Ssh\\Ssh2MethodParam",
             "tarfileset": "Phing\\Task\\Ext\\Archive\\TarFileSet",
             "zipfileset": "Phing\\Task\\Ext\\Archive\\ZipFileSet"
-        },
-        "enable-patching": true,
-        "patchLevel": {
-            "symplify/monorepo-builder": "-p1"
-        },
-        "patches": {
-            "symplify/monorepo-builder": [
-                "symplify-monorepobuilder-support-funding.patch"
-            ]
         }
     },
     "suggest": {
-        "ext-gettext": "*",
-        "ext-posix": "*",
-        "ext-sockets": "*",
-        "ext-tidy": "*",
+        "ext-gettext": "Used for gettext translation filter",
+        "ext-intl": "Used for Tstamp task",
+        "ext-posix": "Used for Posix selector and ACLs",
+        "ext-sockets": "Used for the Socket condition",
+        "ext-tidy": "Used for the Tidy filter",
         "aws/aws-sdk-php": "Used for Amazon tasks",
         "guzzlehttp/guzzle": "Used for Http tasks",
         "jawira/plantuml-encoding": "Required by VisualizerTask",

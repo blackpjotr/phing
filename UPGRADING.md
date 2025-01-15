@@ -7,9 +7,10 @@ This document aims to summarize all those  breaking changes and noteworthy thing
 that you might stumble across when upgrading from Phing 2 to 3.
 
 The list below is not exhaustive. We've tried to list all significant/breaking changes,
-but there's a chance we missed something. If that's the case,
-let us know!
+but there's a chance we missed something. If that's the case, let us know!
 
+General
+-------
 * Phing now requires at least PHP 7.4.
 * All Phing code is now namespaced. This means that existing references to classes
   that existed in earlier Phing versions will no longer work. For example, the
@@ -22,6 +23,9 @@ let us know!
 * Omitting the `basedir` property in the root `project` tag now means "." instead
   of the current working directory. This effectively reverts the change made in 
   http://www.phing.info/trac/ticket/309 ([dfdb0bc](https://github.com/phingofficial/phing/commit/dfdb0bc8095db18284de364b421d320be3c1b6fb))
+
+Tasks
+-----
 * The behavior of `MkdirTask` has changed to be same as of `mkdir` Linux command:
   * When using `MkdirTask` to create a nested directory including its parents
     (eg. `<mkdir dir="a/b/c" />`), the task now creates the parent directories
@@ -75,21 +79,6 @@ let us know!
   * Visualizer
   * ZendCodeAnalyser
   * ZendServerDevelopmentTools
-* The signature from `\Phing\Listener\DefaultLogger::formatTime` has been changed. Therefore, if you have written a
-  logger that overrides this method, you will need to update its signature accordingly.
-* The way how Phing handles file sizes has been normalized, this is explained in documentation.
-    * FileSizeTask: `unit` attribute can be an IEC or SI suffix.
-    * HasFreeSpace condition: `needed` attribute can include an IEC or SI suffix.
-    * Size selector: `units` attribute has been removed, `value` attribute can include an IEC or SI suffix.
-    * TruncateTask: `length` attribute can include an IEC or SI suffix.
-* The way Phing handles and parses boolean values has changed significantly! In general, strings such as `true`, `false`, `TRUE`, `FALSE`, etc. 
-  are no longer parsed into their PHP native equivalent. Specifically:
-  * The way how boolean values are handled inside tasks has been normalized. Therefore `t` is not a valid `true` value any longer.
-    For a list of effected components follow https://github.com/phingofficial/phing/search?p=1&q=booleanValue
-  * Boolean values (such as `true` and `false`) are no longer parsed when loading property files. Instead, the literal string value
-    will be kept as property value.
-  * Property expansion (such as through the `ExpandProperties` filter) also no longer handles boolean values as anything other
-    than literal string values.
 * Obsolete `ExportPropertiesTask` was removed in favor of the `EchoPropertiesTask`
     ```xml
     <exportproperties targetfile="output.props" />
@@ -106,5 +95,35 @@ let us know!
         <arg value="foo"/>
     </exec>
     ```
-* The `tstamp` task now supports ICU syntax 
+* The `tstamp` task now supports ICU syntax
 * The `phpcpd` and `phploc` tasks are removed, because their upstream projects have been abandoned
+* The signature from `\Phing\Listener\DefaultLogger::formatTime` has been changed. Therefore, if you have written a
+  logger that overrides this method, you will need to update its signature accordingly.
+* The way how Phing handles file sizes has been normalized, this is explained in documentation.
+    * FileSizeTask: `unit` attribute can be an IEC or SI suffix.
+    * HasFreeSpace condition: `needed` attribute can include an IEC or SI suffix.
+    * Size selector: `units` attribute has been removed, `value` attribute can include an IEC or SI suffix.
+    * TruncateTask: `length` attribute can include an IEC or SI suffix.
+
+Properties
+----------
+* The way Phing handles and parses boolean values has changed significantly! In general, strings such as `true`, `false`, `TRUE`, `FALSE`, etc.
+  are no longer parsed into their PHP native equivalent. Specifically:
+  * The way how boolean values are handled inside tasks has been normalized. Therefore `t` is not a valid `true` value any longer.
+    For a list of effected components follow https://github.com/phingofficial/phing/search?p=1&q=booleanValue
+  * Boolean values (such as `true` and `false`) are no longer parsed when loading property files. Instead, the literal string value
+    will be kept as property value.
+  * Property expansion (such as through the `ExpandProperties` filter) also no longer handles boolean values as anything other
+    than literal string values.
+* The order of property loading and expansion in property files has changed. When a property exists, but is shadowed / masked by a property of the same name
+  (while loading a property file), the value inside the property file takes precedence:
+    ```xml
+    <property name="http.port" value="8080"/>
+    <property file="foo.properties"/>
+    ```
+  (with `foo.properties` containing the following):
+    ```properties
+    http.port = 80
+    http.url = https://localhost:${http.port}
+    ```
+  In this case `http.url` expands to `https://localhost:80`,  _not_ `https://localhost:8080`.

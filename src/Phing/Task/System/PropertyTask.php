@@ -113,9 +113,9 @@ class PropertyTask extends Task
     private $required = false;
 
     /**
-     * @param FileParserFactoryInterface $fileParserFactory
+     * @param FileParserFactoryInterface|null $fileParserFactory
      */
-    public function __construct(FileParserFactoryInterface $fileParserFactory = null)
+    public function __construct(?FileParserFactoryInterface $fileParserFactory = null)
     {
         parent::__construct();
         $this->fileParserFactory = $fileParserFactory ?? new FileParserFactory();
@@ -412,7 +412,7 @@ class PropertyTask extends Task
             $prefix .= '.';
         }
         $this->log("Loading Environment {$prefix}", Project::MSG_VERBOSE);
-        foreach ($_ENV as $key => $value) {
+        foreach (getenv() as $key => $value) {
             $props->setProperty($prefix . '.' . $key, $value);
         }
         $this->addProperties($props);
@@ -564,6 +564,18 @@ class PropertyTask extends Task
                         throw new BuildException('Property ' . $propertyName . ' was circularly defined.');
                     }
 
+                    if ($props->containsKey($propertyName)) {
+                        $fragment = $props->getProperty($propertyName);
+                        if (false !== strpos($fragment, '${')) {
+                            $resolveStack[] = $propertyName;
+                            $resolved = false; // parse again (could have been replaced w/ another var)
+                        }
+
+                        $sb .= $fragment;
+
+                        continue;
+                    }
+
                     $fragment = $this->getProject()->getProperty($propertyName);
                     if (null !== $fragment) {
                         $sb .= $fragment;
@@ -571,16 +583,7 @@ class PropertyTask extends Task
                         continue;
                     }
 
-                    if ($props->containsKey($propertyName)) {
-                        $fragment = $props->getProperty($propertyName);
-                        if (false !== strpos($fragment, '${')) {
-                            $resolveStack[] = $propertyName;
-                            $resolved = false; // parse again (could have been replaced w/ another var)
-                        }
-                    } else {
-                        $fragment = '${' . $propertyName . '}';
-                    }
-
+                    $fragment = '${' . $propertyName . '}';
                     $sb .= $fragment;
                 }
 

@@ -18,24 +18,16 @@
  * <http://phing.info>.
  */
 
-namespace Phing\Test\Type\Selector;
+namespace Phing\Test\Task\Ext\Smarty;
 
 use Phing\Test\Support\BuildFileTest;
 
-/**
- * Class ReadWriteTest.
- *
- * Test cases for isReadable/isWritable selectors.
- *
- * @internal
- */
-class ReadWriteTest extends BuildFileTest
+class SmartyTaskTest extends BuildFileTest
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $this->configureProject(
-            PHING_TEST_BASE . '/etc/types/selectors/ReadWriteTest.xml'
-        );
+        $buildXmlFile = PHING_TEST_BASE . '/etc/tasks/ext/smarty/SmartyTaskTest.xml';
+        $this->configureProject($buildXmlFile);
         $this->executeTarget('setup');
     }
 
@@ -44,30 +36,9 @@ class ReadWriteTest extends BuildFileTest
         $this->executeTarget('clean');
     }
 
-    public function testReadable(): void
+    public function testRenderSimpleTemplate(): void
     {
         $this->executeTarget(__FUNCTION__);
-        $project = $this->getProject();
-        $output = $project->getProperty('output');
-        $file = $project->getProperty('file');
-        $this->assertTrue(is_readable(sprintf('%s/%s', $output, $file)));
-    }
-
-    public function testWritable(): void
-    {
-        $this->executeTarget(__FUNCTION__);
-        $project = $this->getProject();
-        $output = $project->getProperty('output');
-        $file = $project->getProperty('file');
-        $this->assertTrue(is_writable(sprintf('%s/%s', $output, $file)));
-    }
-
-    public function testUnwritable(): void
-    {
-        $this->executeTarget(__FUNCTION__);
-        $project = $this->getProject();
-        $output = $project->getProperty('output');
-        $file = $project->getProperty('file');
-        $this->assertFalse(is_writable(sprintf('%s/%s', $output, $file)));
+        $this->assertStringEqualsFile(PHING_TEST_BASE . "/etc/tasks/ext/smarty/tmp/test.txt", "Foo\n");
     }
 }

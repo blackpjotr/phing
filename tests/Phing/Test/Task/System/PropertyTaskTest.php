@@ -38,8 +38,9 @@ class PropertyTaskTest extends BuildFileTest
 
     public function test1(): void
     {
-        // should get no output at all
-        $this->expectOutputAndError('test1', '', '');
+        putenv('MESSAGE=foo bar baz');
+        $this->executeTarget(__FUNCTION__);
+        $this->assertPropertyEquals('testenv.MESSAGE', 'foo bar baz');
     }
 
     public function test2(): void
@@ -47,9 +48,22 @@ class PropertyTaskTest extends BuildFileTest
         $this->expectLog('test2', 'testprop1=aa, testprop3=xxyy, testprop4=aazz');
     }
 
-    public function test4(): void
+    public function testPropertyInFileShouldShadowExistingPropertyWithSameName(): void
     {
-        $this->expectLog('test4', 'http.url is http://localhost:999');
+        $this->expectLog(__FUNCTION__, 'http.url is http://localhost:80');
+        $this->assertPropertyEquals('http.port', '999');
+    }
+
+    public function testOverrideExistingPropertyWithNewProperty(): void
+    {
+        $this->executeTarget(__FUNCTION__);
+        $this->assertPropertyEquals('http.port', '80');
+    }
+
+    public function testOverrideExistingPropertyWithNewPropertyFromFile(): void
+    {
+        $this->executeTarget(__FUNCTION__);
+        $this->assertPropertyEquals('http.port', '80');
     }
 
     public function testPrefixSuccess(): void
